@@ -19,7 +19,7 @@ MAPINIT
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
 
-
+            hola
             BTST.B #0,D0
 
 
@@ -92,6 +92,7 @@ MAPPRBIT
 ; OUTPUT   - NONE THROUGH REGISTERS
 ; MODIFIES - NO REGISTER MODIFIED
 ; -----------------------------------------------------------------------------
+
 
 
 *~Font name~Courier New~
