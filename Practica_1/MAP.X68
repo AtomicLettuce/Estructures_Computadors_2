@@ -19,9 +19,41 @@ MAPINIT
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
 
+
+            BTST.B #0,D0
+
+
+
+
+
+
+
+
+
+
+
+
+
+Mostrar_pantalla_hardware
+            
+            MOVE.B D0,-(A7)
+            
+            
+            
+            MOVE.B #33,D0
+            MOVE.B 00,D1
+            TRAP #15
+            
+            MOVE.B (A7)+,D0
+            
+            RTS
+
+
+
 Retorn_de_direccions
             
             MOVE.L A0,-(A7)                 ;Guardam A0 per poder modificar-lo
+            MOVE.L
             MOVE.B #33,D0                   ;Sel·leccionam la tasca 33
             
             MOVE.B #01,D1                   ;Obtenim direccions de mapatge dels displays de 7 segments
@@ -41,12 +73,9 @@ Retorn_de_direccions
             MOVE.L D1,(A0)+                 ;Guardam direccio dels polsadors
 
 
+            MOVE.L (A7)+,A0                 ;Deixam A0 com estava abans
 
-
-
-            MOVE.L (A7)+,A0
-
-
+            RTS
 
 
 
@@ -63,6 +92,7 @@ MAPPRBIT
 ; OUTPUT   - NONE THROUGH REGISTERS
 ; MODIFIES - NO REGISTER MODIFIED
 ; -----------------------------------------------------------------------------
+
 
 *~Font name~Courier New~
 *~Font size~10~
