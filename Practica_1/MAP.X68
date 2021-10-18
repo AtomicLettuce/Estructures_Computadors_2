@@ -21,39 +21,55 @@ MAPINIT
 
             hola
             BTST.B #0,D0
+            BNE salt_1
+
+Comprova_cond_2
+            BTST.B #1,D0
+            BNE salt_2
+retorna
+            RTE
 
 
+salt_1
+            JSR Mostrar_pantalla_hardware
+            
+            BRA Comprova_cond_2
 
-
-
-
-
-
-
-
+salt_2
+            JSR Retorn_de_direccions
+            
+            BRA retorna
 
 
 
 Mostrar_pantalla_hardware
-            
-            MOVE.B D0,-(A7)
+            ;Guardam valors inicials
+            MOVE.W D0,-(A7)
+            MOVE.W D1,-(A7)
             
             
             
             MOVE.B #33,D0
-            MOVE.B 00,D1
+            MOVE.B #00,D1
             TRAP #15
             
-            MOVE.B (A7)+,D0
+            ;Retornam valors inicials
+            MOVE.W (A7)+,D1
+            MOVE.W (A7)+,D0
             
             RTS
 
 
 
 Retorn_de_direccions
+            ;Guardam valors inicials
+            MOVE.L A0,-(A7)
+            MOVE.W D0,-(A7)
+            MOVE.W D1,-(A7)
             
-            MOVE.L A0,-(A7)                 ;Guardam A0 per poder modificar-lo
-            MOVE.L
+            
+            
+            
             MOVE.B #33,D0                   ;Sel·leccionam la tasca 33
             
             MOVE.B #01,D1                   ;Obtenim direccions de mapatge dels displays de 7 segments
@@ -72,12 +88,13 @@ Retorn_de_direccions
             TRAP #15
             MOVE.L D1,(A0)+                 ;Guardam direccio dels polsadors
 
-
-            MOVE.L (A7)+,A0                 ;Deixam A0 com estava abans
+            
+            ;Retornam valors inicials
+            MOVE.W (A7)+,D1
+            MOVE.W (A7)+,D0
+            MOVE.L (A7)+,A0
 
             RTS
-
-
 
 
 
@@ -92,7 +109,7 @@ MAPPRBIT
 ; OUTPUT   - NONE THROUGH REGISTERS
 ; MODIFIES - NO REGISTER MODIFIED
 ; -----------------------------------------------------------------------------
-
+            RTS
 
 
 *~Font name~Courier New~
