@@ -19,6 +19,40 @@ MAPINIT
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
 
+Retorn_de_direccions
+            
+            MOVE.L A0,-(A7)                 ;Guardam A0 per poder modificar-lo
+            MOVE.B #33,D0                   ;Sel·leccionam la tasca 33
+            
+            MOVE.B #01,D1                   ;Obtenim direccions de mapatge dels displays de 7 segments
+            TRAP #15
+            MOVE.L D1,(A0)+                 ;Guardam la direccio dels 7seg display
+            
+            MOVE.B #02,D1                   ;Obtenim la direccio de mapatge dels LEDs
+            TRAP #15
+            MOVE.L D1,(A0)+                 ;Guardam direccio dels LEDs
+            
+            MOVE.B #03,D1                   ;Obtenim la direccio de mapatge dels interruptors
+            TRAP #15
+            MOVE.L D1,(A0)+                 ;Guardam direccio dels interruptors
+            
+            MOVE.B #07,D1                   ;Obtenim la direccio de mapatge dels polsadors
+            TRAP #15
+            MOVE.L D1,(A0)+                 ;Guardam direccio dels polsadors
+
+
+
+
+
+            MOVE.L (A7)+,A0
+
+
+
+
+
+
+
+
 ; -----------------------------------------------------------------------------
 MAPPRBIT
 ; PRINTS 'ZERO','ONE','TWO',...,'SEVEN' INTO THE 7-SEGMENT DISPLAYS DEPENDING
@@ -29,3 +63,8 @@ MAPPRBIT
 ; OUTPUT   - NONE THROUGH REGISTERS
 ; MODIFIES - NO REGISTER MODIFIED
 ; -----------------------------------------------------------------------------
+
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~0~
+*~Tab size~4~
