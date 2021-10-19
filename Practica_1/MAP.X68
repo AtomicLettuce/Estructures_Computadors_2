@@ -27,7 +27,7 @@ Comprova_cond_2
             BTST.B #1,D0
             BNE salt_2
 retorna
-            RTE
+            RTS
 
 
 salt_1
@@ -49,7 +49,7 @@ Mostrar_pantalla_hardware
             
             
             
-            MOVE.B #33,D0
+            MOVE.B #32,D0
             MOVE.B #00,D1
             TRAP #15
             
@@ -70,7 +70,7 @@ Retorn_de_direccions
             
             
             
-            MOVE.B #33,D0                   ;Sel·leccionam la tasca 33
+            MOVE.B #32,D0                   ;Sel·leccionam la tasca 33
             
             MOVE.B #01,D1                   ;Obtenim direccions de mapatge dels displays de 7 segments
             TRAP #15
@@ -109,6 +109,163 @@ MAPPRBIT
 ; OUTPUT   - NONE THROUGH REGISTERS
 ; MODIFIES - NO REGISTER MODIFIED
 ; -----------------------------------------------------------------------------
+
+            MOVEM.L A0-A1,-(A7)
+            
+            
+            BTST.B #0,(A0)
+            BNE     zero
+            
+            BTST.B #0,(A0)
+            BNE     u
+            
+            BTST.B #0,(A0)
+            BNE     dos
+            
+            BTST.B #0,(A0)
+            BNE     tres
+            
+            BTST.B #0,(A0)
+            BNE     quatre
+            
+            BTST.B #0,(A0)
+            BNE     cinc
+            
+            BTST.B #0,(A0)
+            BNE     sis
+            
+            BTST.B #0,(A0)
+            BNE     set
+            
+            BRA none
+            
+zero
+            LEA TEXT,A0
+            MOVE.B #'Z',(A0)+
+            MOVE.B #'E',(A0)+
+            MOVE.B #'R',(A0)+
+            MOVE.B #'O',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            
+            LEA TEXT,A0
+            JSR STR2SEG
+            JMP final_maprbit
+            
+
+u
+            LEA TEXT,A0
+            MOVE.B #'O',(A0)+
+            MOVE.B #'N',(A0)+
+            MOVE.B #'E',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            
+            LEA TEXT,A0
+            JSR STR2SEG
+            JMP final_maprbit
+dos
+            LEA TEXT,A0
+            MOVE.B #'T',(A0)+
+            MOVE.B #'W',(A0)+
+            MOVE.B #'O',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            
+            LEA TEXT,A0
+            JSR STR2SEG
+            JMP final_maprbit
+tres
+            LEA TEXT,A0
+            MOVE.B #'T',(A0)+
+            MOVE.B #'H',(A0)+
+            MOVE.B #'R',(A0)+
+            MOVE.B #'E',(A0)+
+            MOVE.B #'E',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            
+            LEA TEXT,A0
+            JSR STR2SEG
+            JMP final_maprbit
+quatre
+            LEA TEXT,A0
+            MOVE.B #'F',(A0)+
+            MOVE.B #'O',(A0)+
+            MOVE.B #'U',(A0)+
+            MOVE.B #'R',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            
+            LEA TEXT,A0
+            JSR STR2SEG
+            JMP final_maprbit
+cinc
+            LEA TEXT,A0
+            MOVE.B #'F',(A0)+
+            MOVE.B #'I',(A0)+
+            MOVE.B #'V',(A0)+
+            MOVE.B #'E',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+sis
+            LEA TEXT,A0
+            MOVE.B #'S',(A0)+
+            MOVE.B #'I',(A0)+
+            MOVE.B #'X',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            
+            LEA TEXT,A0
+            JSR STR2SEG
+            JMP final_maprbit
+set
+            LEA TEXT,A0
+            MOVE.B #'S',(A0)+
+            MOVE.B #'E',(A0)+
+            MOVE.B #'V',(A0)+
+            MOVE.B #'E',(A0)+
+            MOVE.B #'N',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            
+            LEA TEXT,A0
+            JSR STR2SEG
+            JMP final_maprbit
+none
+            LEA TEXT,A0
+            MOVE.B #'N',(A0)+
+            MOVE.B #'O',(A0)+
+            MOVE.B #'N',(A0)+
+            MOVE.B #'E',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            MOVE.B #' ',(A0)+
+            
+            LEA TEXT,A0
+            JSR STR2SEG
+            JMP final_maprbit
+
+final_maprbit
+            MOVEM.L (A7)+,A0-A1
             RTS
 
 
