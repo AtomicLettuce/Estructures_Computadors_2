@@ -20,7 +20,8 @@ MAPINIT
 ; -----------------------------------------------------------------------------
 
 
-            BTST.L #0,D0
+
+            BTST.L #0,D0            
             BNE salt_1
 
 Comprova_cond_2
@@ -70,7 +71,7 @@ Retorn_de_direccions
             
             
             
-            MOVE.B #32,D0                   ;Sel·leccionam la tasca 33
+            MOVE.B #32,D0                   ;SelÂ·leccionam la tasca 33
             
             MOVE.B #01,D1                   ;Obtenim direccions de mapatge dels displays de 7 segments
             TRAP #15
@@ -112,7 +113,7 @@ MAPPRBIT
 
             MOVEM.L A0-A1/D0,-(A7)
             
-            MOVE.B (A0),D0                  ;Etrtreim la informació dels botons
+            MOVE.B (A0),D0                  ;Etrtreim la informaciÃ³ dels botons
             NOT.B   D0                      ;Feim aquesta not perque la logica
             ;dels polsador es inversa, es a dir, si esta pitjat sortira un 0
             ;i si no hi esta sort un 1. D'aquesta manera ens estalviam fer
