@@ -425,62 +425,65 @@ BITPOS
             ;Comprovam el bit 0.           
             BTST.L #0,D0
             ;Si hi ha un 1 posa a D1 un 0. 
-            BNE ZERO
+            BNE BIT_ZERO
             
             ;Es fa exactament igual per els altres bits (0-7).
             
             BTST.L #1,D0
-            BNE UN
+            BNE BIT_UN
 
             BTST.L #2,D0
-            BNE DOS        
+            BNE BIT_DOS
             
             BTST.L #3,D0
-            BNE TRES
+            BNE BIT_TRES
             
             BTST.L #4,D0
-            BNE QUATRE
+            BNE BIT_QUATRE
             
             BTST.L #5,D0
-            BNE CINC
+            BNE BIT_CINC
             
             BTST.L #6,D0
-            BNE SIS
+            BNE BIT_SIS
             
             BTST.L #7,D0
-            BNE SET
+            BNE BIT_SET
             
-            ;Si no hi ha camp 1 posam un 8 a D0.
-            MOVE.B #8,D0
+            ;Si no hi ha camp 1 posam un 0 a D0.
+            MOVE.B #0,D0
             
             ;Sortim de la rutina.
             RTS
 
 ;Etiquetes per posar el valor correcte depenent de la instrucció BTST.
-ZERO:
-            MOVE.B #0,D0
-            RTS
-UN:
+BIT_ZERO:
             MOVE.B #1,D0
             RTS
-DOS:
+BIT_UN:
             MOVE.B #2,D0
             RTS
-TRES:
+BIT_DOS:
             MOVE.B #3,D0
             RTS
-QUATRE:
+BIT_TRES:
             MOVE.B #4,D0
             RTS
-CINC:
+BIT_QUATRE:
             MOVE.B #5,D0
             RTS
-SIS:
+BIT_CINC:
             MOVE.B #6,D0
             RTS
-SET:
+BIT_SIS:
             MOVE.B #7,D0
             RTS
+BIT_SET:
+            MOVE.B #8,D0
+            RTS
+
+
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~0~
