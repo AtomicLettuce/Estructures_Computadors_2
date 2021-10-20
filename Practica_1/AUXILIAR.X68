@@ -420,12 +420,67 @@ BITPOS
 ; MODIFIES - NO REGISTER, ASIDE OF D0.B
 ; -----------------------------------------------------------------------------
 
+            ;Anam comprovant de menys pes a més pes amb la instrucció BTST.
+            
+            ;Comprovam el bit 0.           
+            BTST.L #0,D0
+            ;Si hi ha un 1 posa a D1 un 0. 
+            BNE ZERO
+            
+            ;Es fa exactament igual per els altres bits (0-7).
+            
+            BTST.L #1,D0
+            BNE UN
+
+            BTST.L #2,D0
+            BNE DOS        
+            
+            BTST.L #3,D0
+            BNE TRES
+            
+            BTST.L #4,D0
+            BNE QUATRE
+            
+            BTST.L #5,D0
+            BNE CINC
+            
+            BTST.L #6,D0
+            BNE SIS
+            
+            BTST.L #7,D0
+            BNE SET
+            
+            ;Si no hi ha camp 1 posam un 8 a D0.
+            MOVE.B #8,D0
+            
+            ;Sortim de la rutina.
             RTS
 
-
-
-
-
+;Etiquetes per posar el valor correcte depenent de la instrucció BTST.
+ZERO:
+            MOVE.B #0,D0
+            RTS
+UN:
+            MOVE.B #1,D0
+            RTS
+DOS:
+            MOVE.B #2,D0
+            RTS
+TRES:
+            MOVE.B #3,D0
+            RTS
+QUATRE:
+            MOVE.B #4,D0
+            RTS
+CINC:
+            MOVE.B #5,D0
+            RTS
+SIS:
+            MOVE.B #6,D0
+            RTS
+SET:
+            MOVE.B #7,D0
+            RTS
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~0~
