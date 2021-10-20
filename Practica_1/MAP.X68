@@ -19,12 +19,13 @@ MAPINIT
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
 
-            hola
-            BTST.B #0,D0
+
+
+            BTST.L #0,D0            
             BNE salt_1
 
 Comprova_cond_2
-            BTST.B #1,D0
+            BTST.L #1,D0
             BNE salt_2
 retorna
             RTS
@@ -70,7 +71,7 @@ Retorn_de_direccions
             
             
             
-            MOVE.B #32,D0                   ;Sel�leccionam la tasca 33
+            MOVE.B #32,D0                   ;Sel·leccionam la tasca 33
             
             MOVE.B #01,D1                   ;Obtenim direccions de mapatge dels displays de 7 segments
             TRAP #15
@@ -110,35 +111,48 @@ MAPPRBIT
 ; MODIFIES - NO REGISTER MODIFIED
 ; -----------------------------------------------------------------------------
 
-            MOVEM.L A0-A1,-(A7)
+            MOVEM.L A0-A1/D0,-(A7)
+            
+            MOVE.B (A0),D0                  ;Etrtreim la informació dels botons
+            NOT.B   D0                      ;Feim aquesta not perque la logica
+            ;dels polsador es inversa, es a dir, si esta pitjat sortira un 0
+            ;i si no hi esta sort un 1. D'aquesta manera ens estalviam fer
+            ;altre tipus de comprovacions
+            
+            JSR BITPOS                      ;Comprovam quin boto esta pitjat
             
             
-            BTST.B #0,(A0)
-            BNE     zero
+            ;Depenent del boto pitjat escriurem una cosa o una altre
+            CMP.B #1,D0
+            BEQ     zero
             
-            BTST.B #0,(A0)
-            BNE     u
+            CMP.B #2,D0
+            BEQ     uno
             
-            BTST.B #0,(A0)
-            BNE     dos
+            CMP.B #3,D0
+            BEQ     dos
             
-            BTST.B #0,(A0)
-            BNE     tres
+            CMP.B #4,D0
+            BEQ     tres
             
-            BTST.B #0,(A0)
-            BNE     quatre
+            CMP.B #5,D0
+            BEQ     quatre
             
-            BTST.B #0,(A0)
-            BNE     cinc
+            CMP.B #6,D0
+            BEQ     cinc
             
-            BTST.B #0,(A0)
-            BNE     sis
+            CMP.B #7,D0
+            BEQ     sis
             
-            BTST.B #0,(A0)
-            BNE     set
+            CMP.B #8,D0
+            BEQ     set
             
+            ;Si no hi ha cap boto esscriurem none
             BRA none
             
+            
+            ;Escrivim el text corresponent als displays fent servir la subrutin
+            ;STR2SEG 
 zero
             LEA TEXT,A0
             MOVE.B #'Z',(A0)+
@@ -155,7 +169,7 @@ zero
             JMP final_maprbit
             
 
-u
+uno
             LEA TEXT,A0
             MOVE.B #'O',(A0)+
             MOVE.B #'N',(A0)+
@@ -221,6 +235,12 @@ cinc
             MOVE.B #' ',(A0)+
             MOVE.B #' ',(A0)+
             MOVE.B #' ',(A0)+
+            
+            LEA TEXT,A0
+            JSR STR2SEG
+            JMP final_maprbit
+
+            
 sis
             LEA TEXT,A0
             MOVE.B #'S',(A0)+
@@ -264,9 +284,14 @@ none
             JSR STR2SEG
             JMP final_maprbit
 
+;Punt de tornada d'aquesta subrutina (MAPRBIT)
 final_maprbit
-            MOVEM.L (A7)+,A0-A1
+            MOVEM.L (A7)+,A0-A1/D0
             RTS
+
+
+
+
 
 
 *~Font name~Courier New~
