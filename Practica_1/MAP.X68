@@ -21,6 +21,7 @@ MAPINIT
 
 
 
+
             BTST.L #0,D0            
             BNE salt_1
 
@@ -288,6 +289,7 @@ none
 final_maprbit
             MOVEM.L (A7)+,A0-A1/D0
             RTS
+
 
 
 
