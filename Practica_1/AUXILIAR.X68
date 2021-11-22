@@ -195,7 +195,7 @@ principi_bucle:
 
             ;Escrivim dins del segment que toca la lletra que toca
 
-A:          MOVE.W #$7700,D2
+A:          MOVE.W #SEG_A,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -205,7 +205,7 @@ A:          MOVE.W #$7700,D2
 
             JMP fi_bucle
 
-B:          MOVE.W #$7C00,D2
+B:          MOVE.W #SEG_B,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -215,7 +215,7 @@ B:          MOVE.W #$7C00,D2
 
             JMP fi_bucle
             
-C:          MOVE.W #$3900,D2
+C:          MOVE.W #SEG_C,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -225,7 +225,7 @@ C:          MOVE.W #$3900,D2
 
             JMP fi_bucle
 
-D:          MOVE.W #$5E00,D2
+D:          MOVE.W #SEG_D,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -235,7 +235,7 @@ D:          MOVE.W #$5E00,D2
 
             JMP fi_bucle
 
-E:          MOVE.W #$7900,D2
+E:          MOVE.W #SEG_E,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -245,7 +245,7 @@ E:          MOVE.W #$7900,D2
 
             JMP fi_bucle
 
-F:          MOVE.W #$7100,D2
+F:          MOVE.W #SEG_F,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -255,7 +255,7 @@ F:          MOVE.W #$7100,D2
 
             JMP fi_bucle
 
-G:          MOVE.W #$3D00,D2
+G:          MOVE.W #SEG_E,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -265,7 +265,7 @@ G:          MOVE.W #$3D00,D2
 
             JMP fi_bucle
 
-H:          MOVE.W #$7600,D2
+H:          MOVE.W #SEG_H,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -275,7 +275,7 @@ H:          MOVE.W #$7600,D2
 
             JMP fi_bucle
 
-I:          MOVE.W #$3000,D2
+I:          MOVE.W #SEG_I,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -285,7 +285,7 @@ I:          MOVE.W #$3000,D2
 
             JMP fi_bucle
 
-J:          MOVE.W #$1E00,D2
+J:          MOVE.W #SEG_J,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -295,7 +295,7 @@ J:          MOVE.W #$1E00,D2
 
             JMP fi_bucle
 
-L:          MOVE.W #$3800,D2
+L:          MOVE.W #SEG_L,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -305,7 +305,7 @@ L:          MOVE.W #$3800,D2
 
             JMP fi_bucle
 
-M:          MOVE.W #$3700,D2
+M:          MOVE.W #SEG_M,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -315,7 +315,7 @@ M:          MOVE.W #$3700,D2
 
             JMP fi_bucle
 
-O:          MOVE.W #$3F00,D2
+O:          MOVE.W #SEG_O,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -325,7 +325,7 @@ O:          MOVE.W #$3F00,D2
 
             JMP fi_bucle
 
-P:          MOVE.W #$7300,D2
+P:          MOVE.W #SEG_P,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -335,7 +335,7 @@ P:          MOVE.W #$7300,D2
 
             JMP fi_bucle
 
-R:          MOVE.W #$5000,D2
+R:          MOVE.W #SEG_R,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -345,7 +345,7 @@ R:          MOVE.W #$5000,D2
 
             JMP fi_bucle
 
-S:          MOVE.W #$6D00,D2
+S:          MOVE.W #SEG_S,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -355,7 +355,7 @@ S:          MOVE.W #$6D00,D2
 
             JMP fi_bucle
 
-T:          MOVE.W #$7800,D2
+T:          MOVE.W #SEG_T,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -365,7 +365,7 @@ T:          MOVE.W #$7800,D2
 
             JMP fi_bucle
 
-U:          MOVE.W #$3E00,D2
+U:          MOVE.W #SEG_U,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -375,7 +375,7 @@ U:          MOVE.W #$3E00,D2
 
             JMP fi_bucle
 
-Y:          MOVE.W #$6E00,D2
+Y:          MOVE.W #SEG_Y,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -385,7 +385,7 @@ Y:          MOVE.W #$6E00,D2
 
             JMP fi_bucle
 
-Z:          MOVE.W #$5B00,D2
+Z:          MOVE.W #SEG_Z,D2
             ADDA.L #2,A1
             MOVE.W D2,(A1)
             
@@ -450,37 +450,40 @@ BITPOS
             BTST.L #7,D0
             BNE BIT_SET
             
-            ;Si no hi ha camp 1 posam un 0 a D0.
-            MOVE.B #0,D0
+            ;Si no hi ha camp 1 posam un 8 a D0.
+            MOVE.B #8,D0
             
             ;Sortim de la rutina.
             RTS
 
 ;Etiquetes per posar el valor correcte depenent de la instrucció BTST.
 BIT_ZERO:
-            MOVE.B #1,D0
+            MOVE.B #0,D0
             RTS
 BIT_UN:
-            MOVE.B #2,D0
+            MOVE.B #1,D0
             RTS
 BIT_DOS:
-            MOVE.B #3,D0
+            MOVE.B #2,D0
             RTS
 BIT_TRES:
-            MOVE.B #4,D0
+            MOVE.B #3,D0
             RTS
 BIT_QUATRE:
-            MOVE.B #5,D0
+            MOVE.B #4,D0
             RTS
 BIT_CINC:
-            MOVE.B #6,D0
+            MOVE.B #5,D0
             RTS
 BIT_SIS:
-            MOVE.B #7,D0
+            MOVE.B #6,D0
             RTS
 BIT_SET:
-            MOVE.B #8,D0
+            MOVE.B #7,D0
             RTS
+
+
+
 
 
 

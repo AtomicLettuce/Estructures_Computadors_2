@@ -123,28 +123,28 @@ MAPPRBIT
             
             
             ;Depenent del boto pitjat escriurem una cosa o una altre
-            CMP.B #1,D0
+            CMP.B #0,D0
             BEQ     zero
             
-            CMP.B #2,D0
+            CMP.B #1,D0
             BEQ     uno
             
-            CMP.B #3,D0
+            CMP.B #2,D0
             BEQ     dos
             
-            CMP.B #4,D0
+            CMP.B #3,D0
             BEQ     tres
             
-            CMP.B #5,D0
+            CMP.B #4,D0
             BEQ     quatre
             
-            CMP.B #6,D0
+            CMP.B #5,D0
             BEQ     cinc
             
-            CMP.B #7,D0
+            CMP.B #6,D0
             BEQ     sis
             
-            CMP.B #8,D0
+            CMP.B #7,D0
             BEQ     set
             
             ;Si no hi ha cap boto esscriurem none
@@ -288,6 +288,8 @@ none
 final_maprbit
             MOVEM.L (A7)+,A0-A1/D0
             RTS
+
+
 
 
 
