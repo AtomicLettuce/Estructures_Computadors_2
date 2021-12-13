@@ -51,6 +51,47 @@ MOUINIT
 
 ; TODO : PLACE YOUR CODE HERE
 
+            ; Guardam tots els registres
+            MOVEM.L D0-D7, -(A7)
+            
+            ; Obtenim la posició i estat del ratolí
+            MOVE.B  #0,D1
+            MOVE.B  #61,D0
+            TRAP #15
+            
+            CLR.L MOUEDGE
+            
+            ; Movem la posició del ratolí
+            MOVE.W D1, MOUX                 
+            LSR.L #16, D1                   ; Perquè la Y està als 16 upperBits
+            MOVE.W D1, MOUY
+            
+            ; Movem l'estat del ratolí
+            AND.B   #%00000111,D0
+            MOVE.B D0, MOUVAL
+            
+            
+            
+            ;DISABLE INTERRUPTS
+            
+            ANDI.W #$F8FF,SR
+            ORI.W #(7<<8)&$700,SR
+            
+            
+            ; Instal·lam la ISR 
+            MOVE.L #MOUREAD, $64+(MOUTRAP-1)*4
+            
+            
+            ; Enable interrupts
+            ANDI.W #$F8FF,SR
+            ORI.W #(0<<8)&$700,SR
+            
+            
+            
+
+
+
+
 
 
 
@@ -134,3 +175,8 @@ SCRUPD
             TRAP    #15
             MOVEM.W (A7)+,D0-D1
             RTE
+
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~0~
+*~Tab size~4~
