@@ -41,7 +41,8 @@ SYSINIT
             MOVE.L (A7)+,D0            
 ;CANVIAM A MODE USUARI.
             AND.W   #$DFFF,SR
-            
+           
+;RESTAURAM LA DIRECCIO DE RETORN.
             MOVE.L D0,-(A7)
 
             RTS
@@ -60,6 +61,8 @@ MOUINIT
 ; OUTPUT   - NONE
 ; MODIFIES - ALL REGISTERS CAN BE MODIFIED
 ; -----------------------------------------------------------------------------
+; TODO : PLACE YOUR CODE HERE
+
 
 ; Guardam tots els registres
             MOVEM.L D0-D1,-(A7)
@@ -69,12 +72,13 @@ MOUINIT
             MOVE.B  #61,D0
             TRAP #15
             
-            CLR.B (MOUEDGE)
+            MOVE.B #0,MOUEDGE
         
 ; Movem la posició del ratolí
-            MOVE.W D1,(MOUX)                 
+            MOVE.W D1,MOUX                 
             LSR.W #8, D1      ; Perquè la Y està als 16 upperBits
-            MOVE.W D1,(MOUY)
+            LSR.L #8, D1
+            MOVE.W D1,MOUY
             
 ; Movem l'estat del ratolí
             AND.B   #%00000111,D0
@@ -85,6 +89,7 @@ MOUINIT
             
 ; Instal·lam la ISR 
             MOVE.L #MOUREAD,($80+MOUTRAP*4)
+            
             MOVE.B #5,D1
             MOVE.B #32,D0
             TRAP #15
@@ -95,7 +100,6 @@ MOUINIT
             MOVEM.L (A7)+,D0-D1
             
             RTS
-
 ; -----------------------------------------------------------------------------
 MOUREAD
 ; MOUSE READING TRAP SERVICE ROUTINE. IT DOES THE FOLLOWING:
@@ -116,27 +120,28 @@ MOUREAD
             TRAP #15
         
 ; Movem la posició del ratolí
-            MOVE.W D1,(MOUX)                 
+            MOVE.W D1,MOUX                 
             LSR.L #8, D1      ; Perquè la Y està als 16 upperBits
-            MOVE.W D1,(MOUY)
+            LSR.L #8, D1
+            MOVE.W D1,MOUY
             
 ; Movem l'estat del ratolí
             AND.B   #%00000111,D0
-            MOVE.B D0,(MOUVAL)  
+            MOVE.B D0,MOUVAL  
             
 ; Miram si MOUVAL != 0
-            CMP.W #0,(MOUVAL)
-            BNE .ACTEDGE   
+            CMP.W #0,D0
+            BEQ .ACTEDGE   
 
 ; Si val 0 posam MOUEDGE a 0
-            MOVE.W #0,(MOUEDGE)           
+            MOVE.B #1,MOUEDGE       
             MOVEM.L (A7)+,D0-D1
             
             RTE
             
 .ACTEDGE
 ; Si val 1 posam MOUEDGE a 1
-            ;MOVE.W #1,(MOUEDGE)
+            MOVE.B #0,MOUEDGE
             MOVEM.L (A7)+,D0-D1
 
             RTE
@@ -191,7 +196,8 @@ SCRUPD
             TRAP    #15
             MOVEM.W (A7)+,D0-D1
             RTE
+
 *~Font name~Courier New~
-*~Font size~10~
+*~Font size~16~
 *~Tab type~0~
 *~Tab size~4~
