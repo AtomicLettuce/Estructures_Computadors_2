@@ -22,17 +22,30 @@ SYSINIT
 ; MODIFIES - NONE
 ; NOTE     - NOTE THAT INTERRUPTS REMAIN DISABLED AFTER THIS SUBROUTINE
 ; -----------------------------------------------------------------------------
+         
+;GUARDAM ELS REGISTRES A RESTAURAR.
+            MOVE.L D1,-(A7)
 
-; TODO : PLACE YOUR CODE HERE
+;DESHABILITAM INTERRUPCIONS.
+            OR.W    #$0700,SR
+;CRIDAM A LA SUBRUTINA SCRINIT.
+            JSR SCRINIT
+;CRIDAM A LA SUBRUTINA MOUINIT.
+            JSR MOUINIT
+;HABILITAM EXECUCIONS SIMULADES.            
+            MOVE.B #5,D1
+            TRAP #15   
+;RESTAURAM ELS REGISTRES.
+            MOVE.L (A7)+,D1
+;FEIM UNA COPIA DE LA DIRECCIO RTS
+            MOVE.L (A7)+,D0            
+;CANVIAM A MODE USUARI.
+            AND.W   #$DFFF,SR
+           
+;RESTAURAM LA DIRECCIO DE RETORN.
+            MOVE.L D0,-(A7)
 
-
-
-
-
-
-
-
-
+            RTS
 
 ; =============================================================================
 ; MOUSE MANAGEMENT (SYSTEM CODE)
@@ -49,6 +62,7 @@ MOUINIT
 ; MODIFIES - ALL REGISTERS CAN BE MODIFIED
 ; -----------------------------------------------------------------------------
 
+<<<<<<< Updated upstream
 ; TODO : PLACE YOUR CODE HERE
 
 
@@ -60,6 +74,44 @@ MOUINIT
 
 
 
+=======
+; Guardam tots els registres
+            MOVEM.L D0-D1,-(A7)
+            
+; Obtenim la posició i estat del ratolí
+            MOVE.B  #0,D1
+            MOVE.B  #61,D0
+            TRAP #15
+            
+            MOVE.B #0,MOUEDGE
+        
+; Movem la posició del ratolí
+            MOVE.W D1,MOUX                 
+            LSR.W #8, D1      ; Perquè la Y està als 16 upperBits
+            LSR.L #8, D1
+            MOVE.W D1,MOUY
+            
+; Movem l'estat del ratolí
+            AND.B   #%00000111,D0
+            MOVE.B D0, MOUVAL            
+                        
+;Desabilitam interrupcions          
+            ORI.W    #$0700,SR
+            
+; Instal·lam la ISR 
+            MOVE.L #MOUREAD,($80+MOUTRAP*4)
+            
+            MOVE.B #5,D1
+            MOVE.B #32,D0
+            TRAP #15
+            
+; Enable interrupts
+            AND.W   #$F8FF,SR
+            
+            MOVEM.L (A7)+,D0-D1
+            
+            RTS
+>>>>>>> Stashed changes
 
 ; -----------------------------------------------------------------------------
 MOUREAD
@@ -72,17 +124,40 @@ MOUREAD
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
 
-; TODO : PLACE YOUR CODE HERE
+; Guardam tots els registres
+            MOVEM.L D0-D1,-(A7)
 
+; Obtenim la posició i estat del ratolí
+            MOVE.B  #0,D1
+            MOVE.B  #61,D0
+            TRAP #15
+        
+; Movem la posició del ratolí
+            MOVE.W D1,MOUX                 
+            LSR.L #8, D1      ; Perquè la Y està als 16 upperBits
+            LSR.L #8, D1
+            MOVE.W D1,MOUY
+            
+; Movem l'estat del ratolí
+            AND.B   #%00000111,D0
+            MOVE.B D0,MOUVAL  
+            
+; Miram si MOUVAL != 0
+            CMP.W #0,D0
+            BEQ .ACTEDGE   
 
+; Si val 0 posam MOUEDGE a 0
+            MOVE.B #1,MOUEDGE       
+            MOVEM.L (A7)+,D0-D1
+            
+            RTE
+            
+.ACTEDGE
+; Si val 1 posam MOUEDGE a 1
+            MOVE.B #0,MOUEDGE
+            MOVEM.L (A7)+,D0-D1
 
-
-
-
-
-
-
-
+            RTE
 
 ; =============================================================================
 ; SCREEN MANAGEMENT (SYSTEM CODE)
