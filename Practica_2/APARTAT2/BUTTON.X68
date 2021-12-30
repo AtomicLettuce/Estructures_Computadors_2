@@ -45,11 +45,16 @@ BTNINIT
 
 
 
+    ;Copiam el punter SDB a VDB
+    
+    MOVE.L (A1),(A0)
+    
+    ; Netejam el byte d'estat
+    ADDA #4,A1  ; Moure punter
+    CLR.B (A1)
+    SUBA #4,A1  ; Deixar el punter com estava
 
-
-
-
-
+    RTS
 
 
 
@@ -95,3 +100,8 @@ BTNPLOT
 
 
 
+
+*~Font name~Courier New~
+*~Font size~16~
+*~Tab type~1~
+*~Tab size~4~

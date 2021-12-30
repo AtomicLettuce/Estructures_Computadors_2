@@ -37,7 +37,7 @@ SYSINIT
             TRAP #15   
 ;RESTAURAM ELS REGISTRES.
             MOVE.L (A7)+,D1
-;FEIM UNA COPIA DE LA DIRECCIO RTS
+;FEIM UNA COPIA DE LA DIRECCIO RTS.
             MOVE.L (A7)+,D0            
 ;CANVIAM A MODE USUARI.
             AND.W   #$DFFF,SR
@@ -61,45 +61,43 @@ MOUINIT
 ; OUTPUT   - NONE
 ; MODIFIES - ALL REGISTERS CAN BE MODIFIED
 ; -----------------------------------------------------------------------------
-; TODO : PLACE YOUR CODE HERE
 
-
-; Guardam tots els registres
+;GUARDAM ELS REGISTRES A RESTAURAR.
             MOVEM.L D0-D1,-(A7)
             
-; Obtenim la posició i estat del ratolí
+;OBTENIM LA POSICIO I L'ESTAT DEL RATOLI.
             MOVE.B  #0,D1
             MOVE.B  #61,D0
             TRAP #15
-            
+;NETETJAM MOUSEDGE
             MOVE.B #0,MOUEDGE
         
-; Movem la posició del ratolí
-            MOVE.W D1,MOUX                 
-            LSR.W #8, D1      ; Perquè la Y està als 16 upperBits
+;MOVEM LA POSICIO X I Y A LES VARIABLES.
+            MOVE.W D1,MOUX    
+;MOVEM 16 BITS A LA DRETA PER OBTENIR LA Y.
+            LSR.W #8, D1      
             LSR.L #8, D1
             MOVE.W D1,MOUY
             
-; Movem l'estat del ratolí
+;FEIM UNA MASCARA DE L'ESTAT I LA GUARDAM.
             AND.B   #%00000111,D0
             MOVE.B D0, MOUVAL            
                         
-;Desabilitam interrupcions          
-            ORI.W    #$0700,SR
-            
-; Instal·lam la ISR 
+;DESHABILITAM LES INTERRUPCIONS TEMPORALMENT.          
+            ORI.W    #$0700,SR            
+;INSTAL LAM LA ISR MOUREAD AL VECTOR 1. 
             MOVE.L #MOUREAD,($80+MOUTRAP*4)
-            
+;ACTIVAM LES INTERRUPCIONS VECTORITZADES.
             MOVE.B #5,D1
             MOVE.B #32,D0
             TRAP #15
-            
-; Enable interrupts
+;TORNAM A ACTIVAR LES INTERRUPCIONS.
             AND.W   #$F8FF,SR
             
-            MOVEM.L (A7)+,D0-D1
-            
+;RESTAURAM ELS REGISTRES EMPRATS.
+            MOVEM.L (A7)+,D0-D1            
             RTS
+
 ; -----------------------------------------------------------------------------
 MOUREAD
 ; MOUSE READING TRAP SERVICE ROUTINE. IT DOES THE FOLLOWING:
@@ -111,39 +109,39 @@ MOUREAD
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
 
-; Guardam tots els registres
+;GUARDAM ELS REGISTRES A RESTAURAR.
             MOVEM.L D0-D1,-(A7)
-
-; Obtenim la posició i estat del ratolí
+            
+;OBTENIM LA POSICIO I L'ESTAT DEL RATOLI.
             MOVE.B  #0,D1
             MOVE.B  #61,D0
             TRAP #15
         
-; Movem la posició del ratolí
-            MOVE.W D1,MOUX                 
-            LSR.L #8, D1      ; Perquè la Y està als 16 upperBits
+;MOVEM LA POSICIO X I Y A LES VARIABLES.
+            MOVE.W D1,MOUX    
+;MOVEM 16 BITS A LA DRETA PER OBTENIR LA Y.
+            LSR.L #8, D1      
             LSR.L #8, D1
             MOVE.W D1,MOUY
             
-; Movem l'estat del ratolí
+;FEIM UNA MASCARA DE L'ESTAT I LA GUARDAM.
             AND.B   #%00000111,D0
-            MOVE.B D0,MOUVAL  
-            
-; Miram si MOUVAL != 0
+            MOVE.B D0, MOUVAL    
+              
+;MIRAM SI MOUVAL (D0) ES DIFERENT A 0.
             CMP.W #0,D0
             BEQ .ACTEDGE   
 
-; Si val 0 posam MOUEDGE a 0
+;SI HO ES SIGNIFICA QUE HI HA UN BOTO PITJAT.
             MOVE.B #1,MOUEDGE       
-            MOVEM.L (A7)+,D0-D1
-            
+;RESTAURAM ELS REGISTRES EMPRATS.
+            MOVEM.L (A7)+,D0-D1            
             RTE
             
-.ACTEDGE
-; Si val 1 posam MOUEDGE a 1
+.ACTEDGE    ;SI NO HI HA CAP BOTO PITJAT POSAM 0.
             MOVE.B #0,MOUEDGE
+            ;RESTAURAM ELS REGISTRES EMPRATS.
             MOVEM.L (A7)+,D0-D1
-
             RTE
 
 ; =============================================================================
