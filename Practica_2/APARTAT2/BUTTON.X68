@@ -73,7 +73,7 @@ BTNUPD
 
 
 
-
+    RTS
 
 
 
@@ -91,14 +91,84 @@ BTNPLOT
 
 ; TODO : PLACE YOUR CODE HERE
 
+;Guardam registres
+    MOVEM.L D0-D4/A0-A1,-(A7)
+
+; Definim les caracteristiques del llapis que pinta
+    
+; PEN WIDTH
+    MOVE.B BTNPENWD,D1
+    MOVE.W #93,D0
+    TRAP #15
+    
+;CONTOUR COLOUR
+    MOVE.L  BTNPENCL,D1
+    MOVE #80,D0
+    TRAP #15
+
+;FILL COLOUR SWITCH
+    ADDA #4,A0
+    CMP.B #0,(A0)
+    BEQ .MOUTSIDE
+    
+    BTST.B #1,(A0)
+    BNE .MOUPRESSED
+    
+
+; FILL COLOUR si dins pero no pitjat    
+    MOVE.L BTNSELCL,D1
+    MOVE.W #81,D0
+    TRAP #15
+    BRA .SORTIDA
+     
+    
+; FILL COLOUR si no hi ha el ratoli damunt
+.MOUTSIDE
+    MOVE.L #0,D1
+    MOVE.W #81,D0
+    TRAP #15
+    BRA .SORTIDA
+
+;FILL COLOUR si dins i pitjat
+.MOUPRESSED
+    MOVE.L BTNPRSCL,D1
+    MOVE.W #81,D0
+    TRAP #15
+    BRA .SORTIDA
+    
+
+
+.SORTIDA
+    ; A0 torna a apuntar a l'inici de VDB
+    SUBA #4,A0
+    MOVE.L (A0),A1
+    
+    ; Obtencio coordenades
+    MOVE.W (A1)+,D2 ; UPPER Y
+    MOVE.W (A1)+,D1 ; LEFT X
+    MOVE.W D1,D3    
+    MOVE.W D2,D4
+    
+    ADD.W (A1)+,D4 ; LOWER Y
+    ADD.W (A1)+,D3 ; RIGHT X
+    
+    
+    ; Dibuixam el rectangle com amb les especificacions de llapis definides
+    MOVE.W #87,D0
+    TRAP #15
+    
+    ; Ara a1 torna a apuntar a l'inici de SDB
+    MOVE.L (A0),A1
+    
 
 
 
 
 
+;Ressetejam registres
+    MOVEM.L (A7)+,D0-D4/A0-A1
 
-
-
+    RTS
 
 
 *~Font name~Courier New~
