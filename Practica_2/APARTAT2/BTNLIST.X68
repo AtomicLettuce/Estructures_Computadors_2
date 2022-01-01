@@ -97,13 +97,32 @@ BTLUPD
 
 ; -----------------------------------------------------------------------------
 BTLPLOT
-; CALLS BTNUPD FOR ALL THE BUTTONS IN THE BUTTON LIST.
+; CALLS BTNPLOT FOR ALL THE BUTTONS IN THE BUTTON LIST.
 ; INPUT    : NONE
 ; OUTPUT   : NONE
 ; MODIFIES : NONE
 ; -----------------------------------------------------------------------------
 
-; TODO : PLACE YOUR CODE HERE
+            MOVEM.L A0/D0,-(A7)
+
+            ; TRAVERSE THE LIST
+
+            LEA     BTLDATA,A0
+            MOVE.W  #BTLMXVDB-1,D0
+.LOOP       CMP.L   #$FFFFFFFF,(A0)
+            BEQ     .DONE
+
+            ; UPDATE EACH BUTTON
+
+            JSR     BTNPLOT
+
+            ; GO TO THE NEXT BUTTON
+
+            ADD.L   #BTNSZVDB,A0
+            DBRA.W  D0,.LOOP
+
+.DONE       MOVEM.L (A7)+,A0/D0
+            RTS
 
 
 
@@ -111,6 +130,7 @@ BTLPLOT
 
 
 
-
-
-
+*~Font name~Courier New~
+*~Font size~10~
+*~Tab type~0~
+*~Tab size~4~
