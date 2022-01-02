@@ -47,12 +47,12 @@ BTNINIT
 
     ;Copiam el punter SDB a VDB
     
-    MOVE.L (A1),(A0)
+    MOVE.L A1,(A0)
     
     ; Netejam el byte d'estat
-    ADDA #4,A1  ; Moure punter
-    CLR.B (A1)
-    SUBA #4,A1  ; Deixar el punter com estava
+    ADDA #4,A0  ; Moure punter
+    CLR.B (A0)
+    SUBA #4,A0  ; Deixar el punter com estava
 
     RTS
 
@@ -97,12 +97,12 @@ BTNPLOT
 ; Definim les caracteristiques del llapis que pinta
     
 ; PEN WIDTH
-    MOVE.B BTNPENWD,D1
+    MOVE.B #BTNPENWD,D1
     MOVE.W #93,D0
     TRAP #15
     
 ;CONTOUR COLOUR
-    MOVE.L  BTNPENCL,D1
+    MOVE.L #BTNPENCL,D1
     MOVE #80,D0
     TRAP #15
 
@@ -116,7 +116,7 @@ BTNPLOT
     
 
 ; FILL COLOUR si dins pero no pitjat    
-    MOVE.L BTNSELCL,D1
+    MOVE.L #BTNSELCL,D1
     MOVE.W #81,D0
     TRAP #15
     BRA .SORTIDA
@@ -131,7 +131,7 @@ BTNPLOT
 
 ;FILL COLOUR si dins i pitjat
 .MOUPRESSED
-    MOVE.L BTNPRSCL,D1
+    MOVE.L #BTNPRSCL,D1
     MOVE.W #81,D0
     TRAP #15
     BRA .SORTIDA
@@ -139,27 +139,43 @@ BTNPLOT
 
 
 .SORTIDA
-    ; A0 torna a apuntar a l'inici de VDB
+    ; A0 torna a apuntar a l'inici de VDB i A1 a l'inici de SDB
     SUBA #4,A0
     MOVE.L (A0),A1
     
+    
+    ; Neteja de registres per evitar problemes
+    CLR.L D1
+    CLR.L D2
+    CLR.L D3
+    CLR.L D4
     ; Obtencio coordenades
     MOVE.W (A1)+,D2 ; UPPER Y
     MOVE.W (A1)+,D1 ; LEFT X
     MOVE.W D1,D3    
     MOVE.W D2,D4
     
-    ADD.W (A1)+,D4 ; LOWER Y
-    ADD.W (A1)+,D3 ; RIGHT X
+    MOVE.W (A1)+,D5 ; HEIGHT
+    MOVE.W (A1)+,D6 ; WIDTH
     
+    ADD.W D5,D4 ; LOWER Y
+    ADD.W D6,D3 ; RIGHT X
+    
+
+    
+
     
     ; Dibuixam el rectangle com amb les especificacions de llapis definides
     MOVE.W #87,D0
     TRAP #15
     
-    ; Ara a1 torna a apuntar a l'inici de SDB
-    MOVE.L (A0),A1
-    
+    ; Escrivim el text
+    ADDA #4,A1
+    DIVU.W #2,D5
+    ADD D5,D2   ; Y COORD
+    SUB.W #8,D2 ; Restam per tal de que quedi centrat
+    MOVE.W #95,D0
+    TRAP #15
 
 
 
@@ -169,6 +185,7 @@ BTNPLOT
     MOVEM.L (A7)+,D0-D4/A0-A1
 
     RTS
+
 
 
 *~Font name~Courier New~
