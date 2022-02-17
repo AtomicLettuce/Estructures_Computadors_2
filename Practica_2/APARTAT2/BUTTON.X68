@@ -41,22 +41,15 @@ BTNINIT
 ; MODIFIES : NONE
 ; -----------------------------------------------------------------------------
 
-; TODO : PLACE YOUR CODE HERE
-
-
-
-    ;Copiam el punter SDB a VDB
-    
-    MOVE.L (A1),(A0)
+    ;Copiam el punter SDB a VDB    
+    MOVE.L A1,(A0)
     
     ; Netejam el byte d'estat
-    ADDA #4,A1  ; Moure punter
-    CLR.B (A1)
-    SUBA #4,A1  ; Deixar el punter com estava
+    ADDA #4,A0  ; Moure punter
+    CLR.B (A0)
+    SUBA #4,A0  ; Deixar el punter com estava
 
     RTS
-
-
 
 ; -----------------------------------------------------------------------------
 BTNUPD
@@ -66,17 +59,65 @@ BTNUPD
 ; MODIFIES : NONE
 ; -----------------------------------------------------------------------------
 
-; TODO : PLACE YOUR CODE HERE
+    MOVEM D0-D5/A0-A2,-(A7)
 
+    MOVE.L (A0),A1
+    MOVE.L (A0),A2
+    ;APUNTAM AL BYTE DE STATUS.
+    ADDA #4,A0
+    MOVE.W (A1)+,D0 ;Y TOP
+    MOVE.W (A1)+,D1 ;X TOP
+    
+    MOVE.W D0,D2
+    MOVE.W D1,D3
+    
+    ADD.W (A1)+,D2 ;X BOT
+    ADD.W (A1)+,D3 ;Y BOT
+    
+    MOVE.W MOUX,D4 ;X ACTUAL
+    MOVE.W MOUY,D5 ;Y ACTUAL
+    
+    CMP D4,D1 ;COMP X ESQ SUP
+    BGE .FORA 
 
+    CMP D5,D0 ;COMP Y ESQ SUP
+    BGE .FORA
+    
+    CMP D4,D3 ;COMP X ESQ INF
+    BLE .FORA
+    
+    CMP D5,D2 ;COMP Y ESQ INF
+    BLE .FORA
 
+;MIRAM L'ESTAT DE MOUEDGE PER SI S'HA FET CLICK  
+    CMP.B #0,(MOUEDGE)
+    BNE .CLICK
+;SINO S'HA FET CLICK MIRAM SI ESTA PITJAT (MANTINGUT)
+    CMP.B #0,(MOUVAL)
+    BNE .PRESS
+;SI ESTAVA DEDINS PERO NO PITJAT MOVEM #1 A NES BIT D'STATUS    
+    MOVE.B #%0001,(A0)
+;RESTAURAM REGISTRES        
+.FI MOVEM (A7)+,D0-D5/A0-A2
+    RTS 
+;MOVEM #3 A A NES BIT D'STATUS I SORTIM
+.PRESS
+    MOVE.B #%0011,(A0)
+    BRA .FI
 
-
-
-    RTS
-
-
-
+.CLICK
+;MOVEM #5 A NES BIT D'ESSTATUS 
+    MOVE.B #%0101,(A0)
+;OBTENIM LA DIRECCIO DEL CALLBACK I L'EXECUTAM
+    MOVEA.L (A1),A2
+    JSR (A2)
+;SORTIM RESTAURANT REGISTRES.
+    BRA .FI
+    
+.FORA    
+;SI ESTA FORA DEL BOTO BIT D'STATUS A 0.
+    MOVE.B #0,(A0)    
+    BRA .FI
 
 ; -----------------------------------------------------------------------------
 BTNPLOT
@@ -89,20 +130,18 @@ BTNPLOT
 ; MODIFIES : NONE
 ; -----------------------------------------------------------------------------
 
-; TODO : PLACE YOUR CODE HERE
-
 ;Guardam registres
-    MOVEM.L D0-D4/A0-A1,-(A7)
+    MOVEM.L D0-D7/A0-A2,-(A7)
 
 ; Definim les caracteristiques del llapis que pinta
     
 ; PEN WIDTH
-    MOVE.B BTNPENWD,D1
+    MOVE.B #BTNPENWD,D1
     MOVE.W #93,D0
     TRAP #15
     
 ;CONTOUR COLOUR
-    MOVE.L  BTNPENCL,D1
+    MOVE.L #BTNPENCL,D1
     MOVE #80,D0
     TRAP #15
 
@@ -114,14 +153,12 @@ BTNPLOT
     BTST.B #1,(A0)
     BNE .MOUPRESSED
     
-
 ; FILL COLOUR si dins pero no pitjat    
-    MOVE.L BTNSELCL,D1
+    MOVE.L #BTNSELCL,D1
     MOVE.W #81,D0
     TRAP #15
     BRA .SORTIDA
      
-    
 ; FILL COLOUR si no hi ha el ratoli damunt
 .MOUTSIDE
     MOVE.L #0,D1
@@ -131,46 +168,71 @@ BTNPLOT
 
 ;FILL COLOUR si dins i pitjat
 .MOUPRESSED
-    MOVE.L BTNPRSCL,D1
+    MOVE.L #BTNPRSCL,D1
     MOVE.W #81,D0
     TRAP #15
     BRA .SORTIDA
     
-
-
 .SORTIDA
-    ; A0 torna a apuntar a l'inici de VDB
+    ; A0 torna a apuntar a l'inici de VDB i A1 a l'inici de SDB
     SUBA #4,A0
-    MOVE.L (A0),A1
+    MOVE.L (A0),A1    
     
+    ; Neteja de registres per evitar problemes
+    CLR.L D1
+    CLR.L D2
+    CLR.L D3
+    CLR.L D4
     ; Obtencio coordenades
     MOVE.W (A1)+,D2 ; UPPER Y
     MOVE.W (A1)+,D1 ; LEFT X
     MOVE.W D1,D3    
     MOVE.W D2,D4
     
-    ADD.W (A1)+,D4 ; LOWER Y
-    ADD.W (A1)+,D3 ; RIGHT X
+    MOVE.W (A1)+,D5 ; HEIGHT
+    MOVE.W (A1)+,D6 ; WIDTH
     
-    
+    ADD.W D5,D4 ; LOWER Y
+    ADD.W D6,D3 ; RIGHT X
+
     ; Dibuixam el rectangle com amb les especificacions de llapis definides
     MOVE.W #87,D0
     TRAP #15
     
-    ; Ara a1 torna a apuntar a l'inici de SDB
-    MOVE.L (A0),A1
+    ; Escrivim el text
+    ADDA #4,A1
+    DIVU.W #2,D5
+    ADD D5,D2   ; Y COORD
+
+    MOVEA.L A1,A2 
+
+;HEM D'OBTENIR EL NUMERO DE CARACTERS PER CENTRAR EL TEXT.
+.SIZESTR   
+;EMPRAM D7 PER DUR EL COMPTE
+    ADDQ.W  #1,D7
+;A2 APUNTA A LA CADENA DE CARACTERS I COMPROVAM AMB NULL.   
+    CMP.B   #0,(A2)+
+;SI NO ES NULL NO HEM ACABAT    
+    BNE .SIZESTR    
+;QUAN SORTIGUEM TENDREM UN EXTRA.
+    SUBQ.W #1,D7
     
+;UN CARACTER = 8BITS
+    LSL.W #3,D7
+    
+;PER CENTRAR LA X EMPRAM : RECT_LEFT + (WIDTH - TEXT)/2
+    SUB.W D7,D6
+    LSR.W #1,D6
+    ADD.W D6,D1    
 
+    SUB.W #8,D2 ; RESTAUM UN ACRACTER PER TAL QUE LA Y QUEDI CENTRADA.
+    MOVE.W #95,D0
+    TRAP #15
 
-
-
-
-;Ressetejam registres
-    MOVEM.L (A7)+,D0-D4/A0-A1
+;RESTAURAM ELS  REGISTRES
+    MOVEM.L (A7)+,D0-D7/A0-A2
 
     RTS
-
-
 *~Font name~Courier New~
 *~Font size~16~
 *~Tab type~1~
