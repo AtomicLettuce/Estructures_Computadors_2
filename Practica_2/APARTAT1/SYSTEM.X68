@@ -72,12 +72,8 @@ MOUINIT
 ;NETETJAM MOUSEDGE
             MOVE.B #0,MOUEDGE
         
-;MOVEM LA POSICIO X I Y A LES VARIABLES.
-            MOVE.W D1,MOUX    
-;MOVEM 16 BITS A LA DRETA PER OBTENIR LA Y.
-            LSR.W #8, D1      
-            LSR.L #8, D1
-            MOVE.W D1,MOUY
+;GUARDAM LA X I LA Y A LA VEGADA.            
+            MOVE.L D1,(MOUY)
             
 ;FEIM UNA MASCARA DE L'ESTAT I LA GUARDAM.
             AND.B   #%00000111,D0
@@ -110,40 +106,36 @@ MOUREAD
 ; -----------------------------------------------------------------------------
 
 ;GUARDAM ELS REGISTRES A RESTAURAR.
-            MOVEM.L D0-D1,-(A7)
+            MOVEM.L D0-D2,-(A7)
+;GUARDAM L'ESTAT ANTERIOR DE MOUVAL.            
+            MOVE.B (MOUVAL),D2
             
 ;OBTENIM LA POSICIO I L'ESTAT DEL RATOLI.
             MOVE.B  #0,D1
             MOVE.B  #61,D0
             TRAP #15
-        
-;MOVEM LA POSICIO X I Y A LES VARIABLES.
-            MOVE.W D1,MOUX    
-;MOVEM 16 BITS A LA DRETA PER OBTENIR LA Y.
-            LSR.L #8, D1      
-            LSR.L #8, D1
-            MOVE.W D1,MOUY
-            
-;FEIM UNA MASCARA DE L'ESTAT I LA GUARDAM.
-            AND.B   #%00000111,D0
-            MOVE.B D0, MOUVAL    
+;GUARDAM LA X I LA Y A LA VEGADA.            
+            MOVE.L D1,(MOUY)
+;GUARDAM L'ESTAT ACTUAL DE MOUVAL.
+            MOVE.B D0,(MOUVAL)
+;MIRAM SI HA HAGUT UN CLICK (CANVIA 0 - 1).            
+            NOT.B D2
+            AND.B D2,D0
+;SI DONA 0 SIGNIFICA QUE NO S'HA PRODUIT CLICK.
+            CMP.B #0,D0  
+            BNE .ACTEDGE              
               
-;MIRAM SI MOUVAL (D0) ES DIFERENT A 0.
-            CMP.W #0,D0
-            BEQ .ACTEDGE   
-
-;SI HO ES SIGNIFICA QUE HI HA UN BOTO PITJAT.
-            MOVE.B #1,MOUEDGE       
+            MOVE.B #0,(MOUEDGE)       
 ;RESTAURAM ELS REGISTRES EMPRATS.
-            MOVEM.L (A7)+,D0-D1            
+            MOVEM.L (A7)+,D0-D2            
             RTE
             
-.ACTEDGE    ;SI NO HI HA CAP BOTO PITJAT POSAM 0.
-            MOVE.B #0,MOUEDGE
+.ACTEDGE    ;MOVEM EL MOUEDGE ACTUALITZAT.
+            MOVE.B D2,(MOUEDGE)
             ;RESTAURAM ELS REGISTRES EMPRATS.
-            MOVEM.L (A7)+,D0-D1
+            MOVEM.L (A7)+,D0-D2
             RTE
-
+            
 ; =============================================================================
 ; SCREEN MANAGEMENT (SYSTEM CODE)
 ; =============================================================================
@@ -194,6 +186,10 @@ SCRUPD
             TRAP    #15
             MOVEM.W (A7)+,D0-D1
             RTE
+
+
+
+
 
 *~Font name~Courier New~
 *~Font size~16~
