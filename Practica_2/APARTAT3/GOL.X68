@@ -123,7 +123,7 @@ GOLCLRBT    DC.W    BTLVEMRG                ; YTOP
             DC.W    0*(SCRWIDTH/4)+BTLHOMRG ; XLEFT
             DC.W    BTLVERSZ                ; HEIGHT
             DC.W    SCRWIDTH/4-2*BTLHOMRG   ; WIDTH
-; TODO: PLACE THE CALLBACK HERE
+            DC.L    GRDINIT                       ; TODO: PLACE THE CALLBACK HERE
             DC.B    'CLEAR',0               ; TEXT
             DS.W    0
 
@@ -133,7 +133,7 @@ GOLRUNBT    DC.W    BTLVEMRG                ; YTOP
             DC.W    1*(SCRWIDTH/4)+BTLHOMRG ; XLEFT
             DC.W    BTLVERSZ                ; HEIGHT
             DC.W    SCRWIDTH/4-2*BTLHOMRG   ; WIDTH
-; TODO: PLACE THE CALLBACK HERE
+            DC.L    GOLTORUN                ; TODO: PLACE THE CALLBACK HERE
             DC.B    'RUN',0                 ; TEXT
             DS.W    0
 
@@ -143,7 +143,7 @@ GOLSTPBT    DC.W    BTLVEMRG                ; YTOP
             DC.W    2*(SCRWIDTH/4)+BTLHOMRG ; XLEFT
             DC.W    BTLVERSZ                ; HEIGHT
             DC.W    SCRWIDTH/4-2*BTLHOMRG   ; WIDTH
-; TODO: PLACE THE CALLBACK HERE
+            DC.L    GOLTOPAU                ; TODO: PLACE THE CALLBACK HERE
             DC.B    'STOP',0                ; TEXT
             DS.W    0
 
@@ -153,7 +153,7 @@ GOLSTEBT    DC.W    BTLVEMRG                ; YTOP
             DC.W    3*(SCRWIDTH/4)+BTLHOMRG ; XLEFT
             DC.W    BTLVERSZ                ; HEIGHT
             DC.W    SCRWIDTH/4-2*BTLHOMRG   ; WIDTH
-; TODO: PLACE THE CALLBACK HERE
+            DC.L    GOLDORUN                ; TODO: PLACE THE CALLBACK HERE
             DC.B    'STEP',0                ; TEXT
             DS.W    0
 
@@ -163,7 +163,7 @@ GOLLLFBT    DC.W    2*BTLVEMRG+BTLVERSZ     ; YTOP
             DC.W    0*(SCRWIDTH/4)+BTLHOMRG ; XLEFT
             DC.W    BTLVERSZ                ; HEIGHT
             DC.W    SCRWIDTH/4-2*BTLHOMRG   ; WIDTH
-; TODO: PLACE THE CALLBACK HERE
+            DC.L    GRDLLEFT                ; TODO: PLACE THE CALLBACK HERE
             DC.B    'LOAD LEFT',0           ; TEXT
             DS.W    0
 
@@ -173,7 +173,7 @@ GOLLRTBT    DC.W    2*BTLVEMRG+BTLVERSZ     ; YTOP
             DC.W    1*(SCRWIDTH/4)+BTLHOMRG ; XLEFT
             DC.W    BTLVERSZ                ; HEIGHT
             DC.W    SCRWIDTH/4-2*BTLHOMRG   ; WIDTH
-; TODO: PLACE THE CALLBACK HERE
+            DC.L    GRDLRGT                 ; TODO: PLACE THE CALLBACK HERE
             DC.B    'LOAD RIGHT',0          ; TEXT
             DS.W    0
 
@@ -183,7 +183,7 @@ GOLLOABT    DC.W    2*BTLVEMRG+BTLVERSZ     ; YTOP
             DC.W    2*(SCRWIDTH/4)+BTLHOMRG ; XLEFT
             DC.W    BTLVERSZ                ; HEIGHT
             DC.W    SCRWIDTH/4-2*BTLHOMRG   ; WIDTH
-; TODO: PLACE THE CALLBACK HERE
+            DC.L    GRDLOAD                 ; TODO: PLACE THE CALLBACK HERE
             DC.B    'LOAD ALL',0            ; TEXT
             DS.W    0
 
@@ -193,6 +193,13 @@ GOLSAVBT    DC.W    2*BTLVEMRG+BTLVERSZ     ; YTOP
             DC.W    3*(SCRWIDTH/4)+BTLHOMRG ; XLEFT
             DC.W    BTLVERSZ                ; HEIGHT
             DC.W    SCRWIDTH/4-2*BTLHOMRG   ; WIDTH
-; TODO: PLACE THE CALLBACK HERE
+            DC.L    GRDSAVE                 ; TODO: PLACE THE CALLBACK HERE
             DC.B    'SAVE',0          ; TEXT
             DS.W    0
+
+
+
+*~Font name~Courier New~
+*~Font size~16~
+*~Tab type~1~
+*~Tab size~4~
